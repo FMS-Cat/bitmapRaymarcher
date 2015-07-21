@@ -13,7 +13,7 @@
 	</head>
 	<body>
     <script src="ItaPoly.js"></script>
-	  <script src="bitmapRaymarcher.js"></script>
+	  <script src="distanceTexture.js"></script>
 		<script>
 			function requestText( _url, _callback ){
 				var xhr = new XMLHttpRequest();
@@ -28,8 +28,8 @@
 			var bitmap = null;
       var img = new Image();
       img.onload = function(){
-        bitmapRaymarcher( img, 1024, 1024, function( _canvas ){
-					bitmap = _canvas;
+        createDistanceTexture( img, 512, 512, function( _texture ){
+					bitmap = _texture;
 				} );
       };
       img.src = 'a.png';
