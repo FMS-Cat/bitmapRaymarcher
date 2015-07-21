@@ -28,11 +28,10 @@ float bitmapRaymarcher( sampler2D _tex, vec2 _texReso, vec2 _p ){
   return mix( mix( v00, v10, phase.x ), mix( v01, v11, phase.x ), phase.y );
 }
 
-
 float distFunc( vec3 _p ){
   vec3 p = mod( _p - 0.5 - time * vec3( 0.3, 0.3, 1.0 ) * 0.5, 1.0 ) - 0.5;
   vec2 dist = vec2(
-    bitmapRaymarcher( texture, vec2( 512.0, 512.0 ), saturate( p.xy + 0.5 ) ),
+    bitmapRaymarcher( texture, vec2( 512.0, 512.0 ), saturate( p.xy * vec2( 1.0, -1.0 ) + 0.5 ) ),
     abs( p.z ) - 0.1
   );
   return min( max( dist.x, dist.y ), 0.0 ) + length( max( dist, 0.0 ) );
