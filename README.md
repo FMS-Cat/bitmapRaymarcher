@@ -1,13 +1,15 @@
+<a href="http://fms-cat.github.io/bitmapRaymarcher/">demo is here</a>
+
 # bitmapRaymarcher
 
 raymarch bitmap image ( such as texts, logomarks, silhouettes, etc... )
 
-![](sample.png)
+<img src="img/sample.png>
 
 ### usage
 
 - prepare binary image like this :
-<img src="a.png" width="128">
+<img src="img/a.png" width="128">
 
 - import `ItaPoly.js` and `distanceTexture.js`
 
@@ -38,7 +40,7 @@ raymarch bitmap image ( such as texts, logomarks, silhouettes, etc... )
 "Distance Texture" contains distance from border of binary image.
 Algorithm which creates "Distance Texture" is bit similar to that of gaussian blur.
 
-<img src="distTexture.png">
+<img src="img/distTexture.png">
 
 ### issues
 
