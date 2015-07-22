@@ -37,7 +37,7 @@
       var width = 512;
       var height = 512;
 			var itaPolyMarch = new ItaPoly( width, height );
-			document.body.insertBefore( itaPolyMarch.canvas );
+			document.body.appendChild( itaPolyMarch.canvas );
 
 			requestText( 'raymarch.frag', function( _text ){
 				itaPolyMarch.createProgram( _text, function(){
