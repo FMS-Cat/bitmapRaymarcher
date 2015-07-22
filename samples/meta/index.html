@@ -8,17 +8,10 @@
       *
       {
         background : #000;
-				color : #ddd;
       }
 		</style>
 	</head>
 	<body>
-		<div id="cont">
-			<a href="samples/simple">simple</a>
-			<a href="samples/repetition">repetition</a>
-			<a href="samples/twist">twist</a>
-			<a href="samples/meta">meta</a>
-		</div>
     <script src="../../lib/ItaPoly.js"></script>
 	  <script src="../../lib/distanceTexture.js"></script>
 		<script>
@@ -32,25 +25,19 @@
 				xhr.send();
 			}
 
-			var canvas = document.createElement( 'canvas' );
-			canvas.width = 512;
-			canvas.height = 128;
-			var context = canvas.getContext( '2d' );
-			context.fillStyle = '#ffffff';
-			context.fillRect( 0, 0, 512, 128 );
-			context.fillStyle = '#000000';
-			context.font = '72px Comic Sans MS';
-			context.textAlign = 'center';
-			context.textBaseline = 'middle';
-			context.fillText( 'Samples', 256, 64 );
-      createDistanceTexture( canvas, 512, 128, function( _texture ){
-				bitmap = _texture;
-			} );
+			var bitmap = null;
+      var img = new Image();
+      img.onload = function(){
+        createDistanceTexture( img, 512, 512, function( _texture ){
+					bitmap = _texture;
+				} );
+      };
+      img.src = 'eye.png';
 
       var width = 512;
-      var height = 128;
+      var height = 512;
 			var itaPolyMarch = new ItaPoly( width, height );
-			document.body.insertBefore( itaPolyMarch.canvas, document.getElementById( 'cont' ) );
+			document.body.insertBefore( itaPolyMarch.canvas );
 
 			requestText( 'raymarch.frag', function( _text ){
 				itaPolyMarch.createProgram( _text, function(){

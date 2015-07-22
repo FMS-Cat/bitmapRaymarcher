@@ -5,19 +5,9 @@ precision mediump float;
 uniform sampler2D texture;
 uniform float time;
 uniform vec2 resolution;
-uniform vec4 mouse;
 
 #define saturate(i) clamp(i,0.,1.)
 #define lofi(i,j) i-mod(i,1.0/j)
-
-float hash( float _i ){
-  return fract( sin( _i * 2718.45 ) * 67124.34 );
-}
-
-float smin( float a, float b, float k ){
-  float h = clamp( 0.5+0.5*(b-a)/k, 0.0, 1.0 );
-  return mix( b, a, h ) - k*h*(1.0-h);
-}
 
 mat2 rotate( float _i ){
   return mat2( cos( _i ), sin( _i ), -sin( _i ), cos( _i ) );
@@ -43,15 +33,16 @@ float bitmapRaymarcher( sampler2D _tex, vec2 _texReso, vec2 _p ){
 }
 
 float distFunc( vec3 _p ){
-  float dist = 1E6;
   vec3 p = _p;
-  p.xy = rotate( floor( p.z / 0.6 - 0.5 ) + 0.5 ) * p.xy;
-  p = mod( p - 0.3 + vec3( time, 0.0, 0.0 ), 0.6 ) - 0.3;
-  vec2 d = vec2(
-    bitmapRaymarcher( texture, vec2( 512.0, 128.0 ), saturate( p.xy * vec2( 1.0, -4.0 ) + 0.5 ) ),
-    abs( p.z ) - 0.05
+  p = mod( p - 0.5, 1.0 ) - 0.5;
+  p.zx = rotate( p.y * 7.0 * sin( time * 0.9 ) + time ) * p.zx;
+  p.xy = rotate( p.z * 4.0 * sin( time * 0.8 ) + time ) * p.xy;
+  p.yz = rotate( p.x * 2.0 * sin( time * 0.7 ) + time ) * p.yz;
+  vec2 dist = vec2(
+    bitmapRaymarcher( texture, vec2( 512.0, 512.0 ), saturate( p.xy * vec2( 1.0, -1.0 ) + 0.5 ) ),
+    abs( p.z ) - 0.03
   );
-  return min( max( d.x, d.y ), 0.0 ) + length( max( d, 0.0 ) );
+  return min( max( dist.x, dist.y ), 0.0 ) + length( max( dist, 0.0 ) );
 }
 
 vec3 normalFunc( vec3 _p ){
@@ -66,7 +57,7 @@ vec3 normalFunc( vec3 _p ){
 void main(){
   vec2 p = ( gl_FragCoord.xy * 2.0 - resolution ) / resolution.x;
 
-  vec3 camPos = vec3( 0.0, 0.0, 0.4 ) + vec3( mouse.xy / resolution.xy - 0.5, 0.0 );
+  vec3 camPos = vec3( sin( time * 0.73 ), sin( time * 0.37 ), 0.5 );
   vec3 camCen = vec3( 0.0, 0.0, 0.0 );
   vec3 camDir = normalize( camCen - camPos );
   vec3 camAir = vec3( 0.0, 1.0, 0.0 );
@@ -81,7 +72,7 @@ void main(){
 
   float dist = 0.0;
 
-  for( int i=0; i<72; i++ ){
+  for( int i=0; i<80; i++ ){
     dist = distFunc( rayPos );
     rayLen += dist * 0.5;
     rayPos = rayBeg + rayLen * rayDir;
@@ -93,7 +84,7 @@ void main(){
     vec3 ligDir = normalize( rayPos - ligPos );
     float dif = saturate( dot( -nor, ligDir ) ) * 0.5 + 0.5;
     float spe = pow( saturate( dot( -nor, normalize( ligDir + rayDir ) ) ), 40.0 );
-    rayCol = ( vec3( 1.0 ) * dif + spe ) * exp( -rayLen * 0.1 );
+    rayCol = ( vec3( 1.0 ) * dif + spe ) * exp( -rayLen * 0.5 );
   }
   gl_FragColor = vec4( rayCol, 1.0 );
 }
